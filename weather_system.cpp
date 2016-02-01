@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include "weather_system.hpp"
 
 using namespace std;
@@ -11,17 +12,13 @@ namespace weathersystem
     // Реализация методов реальной системы
     Actual_Weather::Actual_Weather()
     {
-        log.open("log.txt");
-    }
-
-    Actual_Weather::Actual_Weather(string login, string password)
-    {
-        this->emplaceUser(login, password);
+        forecast.open("forecast.txt");
     }
 
     Actual_Weather::~Actual_Weather()
     {
         dtb.clear();
+        forecast.close();
     }
 
     void Actual_Weather::emplaceUser(const string& login, const string& password)
@@ -32,15 +29,18 @@ namespace weathersystem
     bool Actual_Weather::identification(const string& login)
     {
         map <string, string> :: iterator key = dtb.find(login);
-        string password;
         if (key != dtb.end())
         {
+            string password;
+            current.name=login;
             cout << "Аутентификация пользователя." << endl;
             cout << "Пользователь: " << login << endl;
             cout << "Пароль: ";
             cin >> password;
             if (password == key->second)
             {
+                current.password=password;
+                current.authFlag=0;
                 cout << login << ", вход успешно выполнен!" << endl;
                 return 0;
             }
@@ -55,19 +55,70 @@ namespace weathersystem
         }
     }
 
+    void Actual_Weather::showForecast()
+    {
+        char ch;
+        while (forecast >> ch)
+        {
+            cout << ch;
+        }
+    }
+
     // Реализация методов прокси
+
+    Proxy_Watcher::Proxy_Watcher()
+    {
+        weather = new Actual_Weather();
+    }
+
+    // Конструктор копирования уже заполненного объекта
+    Proxy_Watcher::Proxy_Watcher(Actual_Weather &obj)
+    {
+        weather=&obj;
+        log.open("log.txt");
+    }
+
+    // Деструктор прокси
+    Proxy_Watcher::~Proxy_Watcher()
+    {
+        log.close();
+        weather=NULL;
+    }
+
+    void Proxy_Watcher::requestForecast(const string& login)
+    {
+        cout << "Work!" << endl;
+        current.autFlag=identification(login);
+        if (current.autFlag == 0)
+        {
+            showForecast();
+            logging();
+        }
+        exitSystem();
+    }
+
     bool Proxy_Watcher::identification(const string& login)
     {
-        logging(weather->identification(login), login);
         return weather->identification(login);
     }
 
-    void Proxy_Watcher::logging(const bool& idFlag, const string& login)
+    void Proxy_Watcher::exitSystem()
     {
-        if (idFlag == 0)
+        current.name.clear();
+        weather->exitSystem();
+    }
+
+    void Proxy_Watcher::logging()
+    {
+        if (current.autFlag == 0)
         {
-            (weather->log) << "Пользователь " << login << " получил доступ к прогнозу погоды." << endl;
+            log << "Пользователь " << current.name << " получил доступ к прогнозу погоды." << endl;
         }
+    }
+
+    void Proxy_Watcher::showForecast()
+    {
+        weather->showForecast();
     }
 }
 
