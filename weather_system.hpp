@@ -17,19 +17,19 @@ namespace weathersystem
             // Базовый интерфейс
 
             // Добавление нового пользователя в базу данных
-            virtual void emplaceUser(string, string) {}
+            virtual void emplaceUser(const string&, const string&) {}
 
             // Запрос прогноза погоды по логину пользователя
-            virtual void requestForecast(string) {}
+            virtual void requestForecast(const string&) {}
 
             // Идентификация пользователя с помощью логина
-            virtual bool identification(string) {}
+            virtual bool identification(const string&) {}
 
             // Выход из системы
             virtual void exitSystem(){}
 
             // Логгирование
-            virtual void logging(bool, string){}
+            virtual void logging(){}
 
             // Показ прогноза погоды
             virtual void showForecast(){}

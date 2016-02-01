@@ -37,9 +37,6 @@ int main()
     cout << "Ваш логин: ";
     cin >> user.name;
     viewer->requestForecast(user.name);
-    bool flag = viewer->identification(user.name);
-    cout << flag;
-
     return 0;
 }
 

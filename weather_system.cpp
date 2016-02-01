@@ -13,6 +13,10 @@ namespace weathersystem
     Actual_Weather::Actual_Weather()
     {
         forecast.open("forecast.txt");
+        if (!forecast)
+        {
+            cout << "Can't open file!"<< endl;
+        }
     }
 
     Actual_Weather::~Actual_Weather()
@@ -57,10 +61,10 @@ namespace weathersystem
 
     void Actual_Weather::showForecast()
     {
-        char ch;
-        while (forecast >> ch)
+        char buff[1000];
+        while (forecast.getline(buff, 1000))
         {
-            cout << ch;
+            cout << buff << endl;
         }
     }
 
@@ -88,6 +92,7 @@ namespace weathersystem
     void Proxy_Watcher::requestForecast(const string& login)
     {
         cout << "Work!" << endl;
+        current.name=login;
         current.autFlag=identification(login);
         if (current.autFlag == 0)
         {
