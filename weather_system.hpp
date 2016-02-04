@@ -34,7 +34,7 @@ namespace weathersystem
             // Показ прогноза погоды
             virtual void showForecast(){}
 
-            virtual void showData() {}
+            virtual void showData(){}
     };
 
     class Actual_Weather : public Weather_system
@@ -73,7 +73,7 @@ namespace weathersystem
     class Proxy_Watcher : public Weather_system
     {
         private:
-            Actual_Weather *weather;
+            Weather_system *weather;
             struct user
             {
                 string name;
@@ -92,11 +92,6 @@ namespace weathersystem
             virtual void exitSystem();
             virtual void logging();
             virtual void showForecast();
-
-            virtual void showData()
-            {
-                weather->showData();
-            }
     };
 }
 #endif // WEATHER_SYSTEM_HPP

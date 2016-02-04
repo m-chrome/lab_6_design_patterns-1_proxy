@@ -62,10 +62,12 @@ namespace weathersystem
     void Actual_Weather::showForecast()
     {
         char buff[1000];
+        cout << endl;
         while (forecast.getline(buff, 1000))
         {
             cout << buff << endl;
         }
+        cout << endl;
     }
 
     // Реализация методов прокси
@@ -86,12 +88,12 @@ namespace weathersystem
     Proxy_Watcher::~Proxy_Watcher()
     {
         log.close();
-        weather=NULL;
+        delete weather;
     }
 
     void Proxy_Watcher::requestForecast(const string& login)
     {
-        cout << "Work!" << endl;
+        cout << "Запрос прогноза погоды:" << endl;
         current.name=login;
         current.autFlag=identification(login);
         if (current.autFlag == 0)

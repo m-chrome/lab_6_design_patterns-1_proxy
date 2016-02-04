@@ -30,13 +30,12 @@ int main()
 
     session.showData();
     Weather_system *viewer = new Proxy_Watcher(session);
-    cout << endl;
-    viewer->showData();
     cout << "Actual Weather" << endl;
     cout << "Для просмотра погоды необходимо авторизоваться в системе." << endl;
     cout << "Ваш логин: ";
     cin >> user.name;
     viewer->requestForecast(user.name);
+    delete viewer;
     return 0;
 }
 
