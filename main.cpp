@@ -7,6 +7,7 @@ using namespace weathersystem;
 
 int main()
 {
+    // Proxy remake
     ifstream user_dtb;
     user_dtb.open("user_dtb.txt");
     if (!user_dtb)
