@@ -22,15 +22,13 @@ int main()
         string password;
     } user;
 
-    Actual_Weather session;
+    Proxy_Watcher *viewer = new Proxy_Watcher;
 
     while (user_dtb >> user.name >> user.password)
     {
-        session.emplaceUser(user.name, user.password);
+        viewer->emplaceUser(user.name, user.password);
     }
 
-    session.showData();
-    Weather_system *viewer = new Proxy_Watcher(session);
     cout << "Actual Weather" << endl;
     cout << "Для просмотра погоды необходимо авторизоваться в системе." << endl;
     cout << "Ваш логин: ";

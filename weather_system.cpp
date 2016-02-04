@@ -112,7 +112,6 @@ namespace weathersystem
     void Proxy_Watcher::exitSystem()
     {
         current.name.clear();
-        weather->exitSystem();
     }
 
     void Proxy_Watcher::logging()
@@ -126,6 +125,11 @@ namespace weathersystem
     void Proxy_Watcher::showForecast()
     {
         weather->showForecast();
+    }
+
+    void Proxy_Watcher::emplaceUser(const string& login, const string& password)
+    {
+        weather->emplaceUser(login, password);
     }
 }
 

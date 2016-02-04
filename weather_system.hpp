@@ -11,33 +11,7 @@ using namespace std;
 
 namespace weathersystem
 {
-    class Weather_system
-    {
-        public:
-            // Базовый интерфейс
-
-            // Добавление нового пользователя в базу данных
-            virtual void emplaceUser(const string&, const string&) {}
-
-            // Запрос прогноза погоды по логину пользователя
-            virtual void requestForecast(const string&) {}
-
-            // Идентификация пользователя с помощью логина
-            virtual bool identification(const string&) {}
-
-            // Выход из системы
-            virtual void exitSystem(){}
-
-            // Логгирование
-            virtual void logging(){}
-
-            // Показ прогноза погоды
-            virtual void showForecast(){}
-
-            virtual void showData(){}
-    };
-
-    class Actual_Weather : public Weather_system
+    class Actual_Weather
     {
         private:
             map <string, string> dtb;
@@ -54,26 +28,26 @@ namespace weathersystem
             ~Actual_Weather();
 
             // Добавить пользователя в базу данных
-            virtual void emplaceUser(const string& login, const string& password);
+            void emplaceUser(const string& login, const string& password);
 
             // Идентификация нужного пользователя. При успешной аутентификации
             // возвращает 0, 1 - при всех остальных случаях
-            virtual bool identification(const string& login);
+            bool identification(const string& login);
 
             // Показывает авторизованному пользователю прогноз погоды
-            virtual void showForecast();
+            void showForecast();
 
-            virtual void showData()
+            void showData()
             {
                 for (auto &it: dtb)
                      cout << it.first << ' ' << it.second << endl;
             }
     };
 
-    class Proxy_Watcher : public Weather_system
+    class Proxy_Watcher
     {
         private:
-            Weather_system *weather;
+            Actual_Weather *weather;
             struct user
             {
                 string name;
@@ -87,11 +61,15 @@ namespace weathersystem
             Proxy_Watcher(Actual_Weather &obj);
             ~Proxy_Watcher();
 
-            virtual void requestForecast(const string& login);
-            virtual bool identification(const string& login);
-            virtual void exitSystem();
-            virtual void logging();
-            virtual void showForecast();
+            void requestForecast(const string& login);
+            bool identification(const string& login);
+            void exitSystem();
+            void logging();
+            void showForecast();
+
+            // Добавить пользователя в базу данных
+            void emplaceUser(const string& login, const string& password);
+
     };
 }
 #endif // WEATHER_SYSTEM_HPP
