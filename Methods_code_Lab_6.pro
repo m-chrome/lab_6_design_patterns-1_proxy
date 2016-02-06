@@ -12,4 +12,4 @@ qtcAddDeployment()
 HEADERS += \
     weather_system.hpp
 
-QMAKE_CXXFLAGS += -std=c++1y
+QMAKE_CXXFLAGS += -std=c++11

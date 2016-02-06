@@ -6,11 +6,16 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <ctime>
 
 using namespace std;
 
 namespace weathersystem
 {
+    class not_found {};
+    class wrong_pass {};
+    class deny_request {};
+
     class Actual_Weather
     {
         private:
@@ -25,26 +30,21 @@ namespace weathersystem
 
         public:
             Actual_Weather();
-            ~Actual_Weather();
+            virtual ~Actual_Weather();
 
             // Добавить пользователя в базу данных
-            void emplaceUser(const string& login, const string& password);
+            virtual void emplaceUser(const string& login, const string& password);
 
             // Идентификация нужного пользователя. При успешной аутентификации
-            // возвращает 0, 1 - при всех остальных случаях
-            bool identification(const string& login);
+            // возвращает 0, при неверной аутентификации - 1
+            // кидает ислючение, если пользователь отсутствует
+            virtual bool identification(const string& login);
 
             // Показывает авторизованному пользователю прогноз погоды
-            void showForecast();
-
-            void showData()
-            {
-                for (auto &it: dtb)
-                     cout << it.first << ' ' << it.second << endl;
-            }
+            virtual void showForecast();
     };
 
-    class Proxy_Watcher
+    class Proxy_Watcher : public Actual_Weather
     {
         private:
             Actual_Weather *weather;
@@ -59,16 +59,17 @@ namespace weathersystem
         public:
             Proxy_Watcher();
             Proxy_Watcher(Actual_Weather &obj);
-            ~Proxy_Watcher();
+            virtual ~Proxy_Watcher();
 
+            // Унаследованные
+            virtual void emplaceUser(const string& login, const string& password);
+            virtual bool identification(const string& login);
+            virtual void showForecast();
+
+            // Свои
             void requestForecast(const string& login);
-            bool identification(const string& login);
-            void exitSystem();
             void logging();
-            void showForecast();
 
-            // Добавить пользователя в базу данных
-            void emplaceUser(const string& login, const string& password);
 
     };
 }

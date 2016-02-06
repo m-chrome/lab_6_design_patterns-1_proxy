@@ -33,7 +33,15 @@ int main()
     cout << "Для просмотра погоды необходимо авторизоваться в системе." << endl;
     cout << "Ваш логин: ";
     cin >> user.name;
-    viewer->requestForecast(user.name);
+    try
+    {
+        viewer->requestForecast(user.name);
+    }
+    catch(deny_request)
+    {
+        cout << "Запрос отклонён." << endl;
+    }
+
     delete viewer;
     return 0;
 }
