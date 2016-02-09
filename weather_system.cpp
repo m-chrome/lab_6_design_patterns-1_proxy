@@ -144,4 +144,3 @@ namespace weathersystem
         weather->emplaceUser(login, password);
     }
 }
-

@@ -44,7 +44,7 @@ namespace weathersystem
             virtual void showForecast();
     };
 
-    class Proxy_Watcher : public Actual_Weather
+    class Proxy_Watcher
     {
         private:
             Actual_Weather *weather;
