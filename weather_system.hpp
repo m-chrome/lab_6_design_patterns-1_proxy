@@ -17,7 +17,7 @@ namespace weathersystem
             // Базовый интерфейс
 
             // Добавление нового пользователя в базу данных
-            virtual void emplaceUser(const string&, const string&) {}
+            virtual void emplaceUser(const string&, const string&) = 0;
 
             // Запрос прогноза погоды по логину пользователя
             virtual void requestForecast(const string&) {}
