@@ -30,18 +30,18 @@ namespace weathersystem
 
         public:
             Actual_Weather();
-            virtual ~Actual_Weather();
+            ~Actual_Weather();
 
             // Добавить пользователя в базу данных
-            virtual void emplaceUser(const string& login, const string& password);
+            void emplaceUser(const string& login, const string& password);
 
             // Идентификация нужного пользователя. При успешной аутентификации
             // возвращает 0, при неверной аутентификации - 1
             // кидает ислючение, если пользователь отсутствует
-            virtual bool identification(const string& login);
+            bool identification(const string& login);
 
             // Показывает авторизованному пользователю прогноз погоды
-            virtual void showForecast();
+            void showForecast();
     };
 
     class Proxy_Watcher
@@ -59,18 +59,16 @@ namespace weathersystem
         public:
             Proxy_Watcher();
             Proxy_Watcher(Actual_Weather &obj);
-            virtual ~Proxy_Watcher();
+            ~Proxy_Watcher();
 
-            // Унаследованные
-            virtual void emplaceUser(const string& login, const string& password);
-            virtual bool identification(const string& login);
-            virtual void showForecast();
+            // Методы, которые от Actual_Weather
+            void emplaceUser(const string& login, const string& password);
+            bool identification(const string& login);
+            void showForecast();
 
             // Свои
             void requestForecast(const string& login);
             void logging();
-
-
     };
 }
 #endif // WEATHER_SYSTEM_HPP
