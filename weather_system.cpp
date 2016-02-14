@@ -3,6 +3,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <ctime>
+#include <iomanip>
 #include "weather_system.hpp"
 
 using namespace std;
@@ -49,13 +51,14 @@ namespace weathersystem
                 return 0;
             }
             else
+            {
                 cout << "Неверный пароль!" << endl;
-            return 1;
+                return 1;
+            }
         }
         else
         {
-            cout << "Пользователь отсутствует в базе." << endl;
-            return 1;
+            throw not_found();
         }
     }
 
@@ -75,19 +78,19 @@ namespace weathersystem
     Proxy_Watcher::Proxy_Watcher()
     {
         weather = new Actual_Weather();
+        //log.open("log.txt", std::ios::app);
     }
 
     // Конструктор копирования уже заполненного объекта
     Proxy_Watcher::Proxy_Watcher(Actual_Weather &obj)
     {
         weather=&obj;
-        log.open("log.txt");
+
     }
 
     // Деструктор прокси
     Proxy_Watcher::~Proxy_Watcher()
     {
-        log.close();
         delete weather;
     }
 
@@ -95,13 +98,20 @@ namespace weathersystem
     {
         cout << "Запрос прогноза погоды:" << endl;
         current.name=login;
-        current.autFlag=identification(login);
+        try
+        {
+            current.autFlag=identification(login);
+        }
+        catch(not_found)
+        {
+            cout << "Пользователь не найден в базе." << endl;
+            throw deny_request();
+        }
         if (current.autFlag == 0)
         {
             showForecast();
             logging();
         }
-        exitSystem();
     }
 
     bool Proxy_Watcher::identification(const string& login)
@@ -109,23 +119,28 @@ namespace weathersystem
         return weather->identification(login);
     }
 
-    void Proxy_Watcher::exitSystem()
-    {
-        current.name.clear();
-        weather->exitSystem();
-    }
-
     void Proxy_Watcher::logging()
     {
+        log.open("log.txt", std::ios::app);
+
         if (current.autFlag == 0)
         {
-            log << "Пользователь " << current.name << " получил доступ к прогнозу погоды." << endl;
+            time_t currentt;
+            time(&currentt);
+            tm *viewtime = localtime(&currentt);
+            log <<  asctime(viewtime) << "Пользователь " << current.name
+                 << " получил доступ к прогнозу погоды." << endl<< endl;
         }
+        log.close();
     }
 
     void Proxy_Watcher::showForecast()
     {
         weather->showForecast();
     }
-}
 
+    void Proxy_Watcher::emplaceUser(const string& login, const string& password)
+    {
+        weather->emplaceUser(login, password);
+    }
+}

@@ -7,6 +7,7 @@ using namespace weathersystem;
 
 int main()
 {
+    // Proxy remake
     ifstream user_dtb;
     user_dtb.open("user_dtb.txt");
     if (!user_dtb)
@@ -21,20 +22,26 @@ int main()
         string password;
     } user;
 
-    Actual_Weather session;
+    Proxy_Watcher *viewer = new Proxy_Watcher;
 
     while (user_dtb >> user.name >> user.password)
     {
-        session.emplaceUser(user.name, user.password);
+        viewer->emplaceUser(user.name, user.password);
     }
 
-    session.showData();
-    Weather_system *viewer = new Proxy_Watcher(session);
     cout << "Actual Weather" << endl;
     cout << "Для просмотра погоды необходимо авторизоваться в системе." << endl;
     cout << "Ваш логин: ";
     cin >> user.name;
-    viewer->requestForecast(user.name);
+    try
+    {
+        viewer->requestForecast(user.name);
+    }
+    catch(deny_request)
+    {
+        cout << "Запрос отклонён." << endl;
+    }
+
     delete viewer;
     return 0;
 }
